@@ -1,0 +1,154 @@
+{%extends 'base.html'%}
+{%block title%}Fitness Tracker{%endblock%}
+
+{%block content%}
+<style>
+.chart-container {
+    width: 80%;
+    height: 50%;
+    margin: auto;
+    
+}
+
+.slides {
+    left: -500px;
+    animation: slide 2s forwards;
+}
+
+@keyframes slide {
+    100% { left: 0; }
+}
+
+</style>
+<div class="container text-light">
+        <div class="dropdown text-end mt-3">
+            <button class="btn btn-dark dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Add Entry
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a class="dropdown-item" href="{% url 'weight_create'%}">Weight Entry</a></li>
+                <li><a class="dropdown-item" href="{% url 'sleep_create' %}">Sleep Entry</a></li>
+        </div>
+        <h1 class="display-1 text-center">DASHBOARD</h1>
+    <div class="mb-3 display-4 text-center mt-4" style="font-family: 'Oswald', sans-serif;">
+        Weight Chart
+    </div>
+    <div class="slides card chart-container">
+        <canvas id="chart"></canvas>
+    </div>
+    <div class="display-4 text-center mt-5" style="font-family: 'Oswald', sans-serif;">
+        Weight Table
+    </div>
+    <div class="slides">
+    <table class="table table-dark table-striped mt-3" style="font-family: 'Oswald', sans-serif;">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Date</th>
+                <th class="text-center" scope="col">Weight</th>
+                <th class="text-center" scope="col">Delete</th>
+            </tr>
+        </thead>
+    <tbody>
+    {% for weigh_in in user.weigh_ins.all%}
+        <tr>
+            <td class="text-center">{{weigh_in.date}}</td>
+            <td class="text-center">{{weigh_in.weight}}</td>
+            <td class="text-center">
+                <form action="{% url 'weight_delete' weigh_in.pk%}" method="POST">
+                {% csrf_token %}
+                    <input type="hidden" value="{{weigh_in.pk}}" name="delete-id">
+                    <input class="btn-close btn-close-white" aria-label="Close" type="Submit" value="">
+                </form>
+            </td>
+        </tr>
+        {%endfor%}
+    </tbody>
+    </table>
+    </div>
+    <div class="mb-3 display-4 text-center mt-5" style="font-family: 'Oswald', sans-serif;">
+        Sleep Chart
+    </div>
+    <div class="slides card chart-container">
+        <canvas id="sleep_chart"></canvas>
+    </div>
+    <div class="display-4 text-center mt-5" style="font-family: 'Oswald', sans-serif;">
+        Sleep Table
+    </div>
+    <div class="slides">
+    <table class="slides table table-dark table-striped mt-3" style="font-family: 'Oswald', sans-serif;">
+        <thead>
+            <tr>
+                <th class="text-center" scope="col">Date</th>
+                <th class="text-center" scope="col">Hours</th>
+                <th class="text-center" scope="col">Delete</th>
+            </tr>
+        </thead>
+    <tbody>
+    {% for sleep in user.sleeps.all%}
+        <tr>
+            <td class="text-center">{{sleep.date}}</td>
+            <td class="text-center">{{sleep.hours}}</td>
+            <td class="text-center">
+                <form action="{% url 'sleep_delete' sleep.pk%}" method="POST">
+                {% csrf_token %}
+                    <input type="hidden" value="{{sleep.pk}}" name="delete-id">
+                    <input class="btn-close btn-close-white" aria-label="Close" type="Submit" value="">
+                </form>
+            </td>
+        </tr>
+        {%endfor%}
+    </tbody>
+    </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1/dist/chart.min.js"></script>
+<script>
+        const ctx = document.getElementById("chart").getContext('2d');
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+            labels: ["9/13", "9/20", "9/27",
+            "10/4", "10/11", "10/18", "10/25"],
+            datasets: [{
+                label: 'Weight Over Time',
+                backgroundColor: 'rgba(161, 198, 247, 1)',
+                borderColor: 'rgb(47, 128, 237)',
+                data: [180, 178.92, 176.45, 177.78, 176.54, 175.32, 174.14],
+            }]
+            },
+            options: {
+            scales: {
+                yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                }
+                }]
+            }
+            },
+        });
+
+        const ctx2 = document.getElementById("sleep_chart").getContext('2d');
+        const myChart2 = new Chart(ctx2, {
+            type: 'line',
+            data: {
+            labels: ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+            datasets: [{
+                label: 'Hours Slept Last Week',
+                backgroundColor: 'rgba(161, 198, 247, 1)',
+                borderColor: 'rgb(47, 128, 237)',
+                data: [8, 6, 7, 4, 6, 3, 10],
+            }]
+            },
+            options: {
+            scales: {
+                yAxes: [{
+                ticks: {
+                    beginAtZero: true,
+                }
+                }]
+            }
+            },
+        });
+</script>
+{%endblock%}

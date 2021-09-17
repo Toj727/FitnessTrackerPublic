@@ -1,0 +1,35 @@
+:root {
+    --primary: #052c65;
+}
+
+.form-styling form div small{
+    display: none;
+}
+
+body {
+    background: linear-gradient(to bottom, var(--primary),#6e97d3) no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    font-family: 'Oswald', cursive;
+    height: 100vh;
+    
+}
+
+.main-body {
+    background-color: #052c65;
+}
+
+.navbar {
+    background-color: #3d8bfd;
+}
+
+.card {
+    overflow: hidden;
+    border: hidden;
+}
+.card-body {
+    background-color: black;
+    border: hidden;
+}
