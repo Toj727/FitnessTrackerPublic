@@ -2,6 +2,7 @@
 
 Fitness-Tracker is a web application catered to users who want to keep track of their weight loss/gain progress, nutrition plans, and workout plans all in one place.
 
+App URL: https://fitnesstrackerappl.herokuapp.com/
 
 === User Stories ===
 
